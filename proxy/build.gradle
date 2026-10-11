@@ -1,0 +1,27 @@
+plugins {
+    id 'com.gradleup.shadow' version '9.6.1'
+}
+
+dependencies {
+    implementation project(':core')
+    // TransferProxy API 由代理运行期提供(注意:本地开发命中 fork 的 mavenLocal 版本)。
+    compileOnly 'net.transferproxy:api:1.3.1'
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset = 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+tasks.named('shadowJar') {
+    archiveBaseName = 'SecureTransfer-Proxy'
+    archiveClassifier = ''
+}
+
+// 只产出 shadowJar(shadow 会把 core 及其 api 依赖一起打进去)。
+tasks.named('jar') { enabled = false }
+tasks.named('assemble') { dependsOn(tasks.named('shadowJar')) }

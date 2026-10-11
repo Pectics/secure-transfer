@@ -1,0 +1,14 @@
+# Gradle
+.gradle/
+build/
+
+.run/
+
+# IntelliJ IDEA
+out/
+*.iml
+.idea/shelf/
+.idea/workspace.xml
+
+# OS
+.DS_Store

@@ -1,0 +1,34 @@
+plugins {
+    id 'com.gradleup.shadow' version '9.6.1'
+}
+
+repositories {
+    maven { url = uri('https://repo.papermc.io/repository/maven-public/') }
+    maven { url = uri('https://repo.codemc.io/repository/maven-releases/') }
+}
+
+dependencies {
+    implementation project(':core')
+    // 防重放所需,随插件一起打包。
+    implementation 'org.xerial:sqlite-jdbc:3.46.1.3'
+
+    // 运行期由服务端(Paper)与 PacketEvents 插件提供。
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.181-stable'
+    compileOnly 'com.github.retrooper:packetevents-spigot:2.14.0'
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset = 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+tasks.named('shadowJar') {
+    archiveBaseName = 'SecureTransfer-Bukkit'
+    archiveClassifier = ''
+}
+tasks.named('jar') { enabled = false }
+tasks.named('assemble') { dependsOn(tasks.named('shadowJar')) }

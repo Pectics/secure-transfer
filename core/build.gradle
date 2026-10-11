@@ -1,0 +1,20 @@
+plugins {
+    id 'java-library'
+}
+
+// core 是跨侧契约 + 后端领域逻辑,被 proxy / bukkit / fabric 共用。
+dependencies {
+    // 公开配置类使用的 SpotBugs 注解，对消费模块的编译可见，不进入运行期依赖。
+    compileOnlyApi "com.github.spotbugs:spotbugs-annotations:${spotbugs.toolVersion.get()}"
+
+    // 契约:JWT 与配置解析 —— 需随各插件一起打包,故用 api。
+    api 'com.auth0:java-jwt:4.4.0'
+    api 'com.fasterxml.jackson.core:jackson-databind:2.22.3'
+    api 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.22.3'
+
+    // 防重放仅后端(bukkit/fabric)用到;由平台在运行期提供,故 compileOnly(不打进 proxy)。
+    compileOnly 'org.xerial:sqlite-jdbc:3.46.1.3'
+
+    // 日志由各平台提供。
+    compileOnly 'org.slf4j:slf4j-api:2.0.16'
+}

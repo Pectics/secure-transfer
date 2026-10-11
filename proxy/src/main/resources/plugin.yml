@@ -1,0 +1,5 @@
+name: SecureTransfer
+author: Pectics
+version: ${version}
+description: A TransferProxy plugin.
+main: me.pectics.securetransfer.proxy.SecureTransferPlugin

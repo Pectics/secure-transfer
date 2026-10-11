@@ -1,0 +1,53 @@
+plugins {
+    id 'com.diffplug.spotless' version '8.10.2' apply false
+    id 'com.github.spotbugs' version '6.5.13' apply false
+}
+
+// 共享配置:所有子模块统一 group / version / 仓库 / Java toolchain。
+allprojects {
+    group = 'me.pectics'
+    version = '1.0.0'
+
+    repositories {
+        // [本地开发] 命中 fork 的 api(net.transferproxy:api:*),
+        // 由 fork 目录执行 `./gradlew :api:publishToMavenLocal` 提供。
+        // 恢复官方依赖后可删除本行。
+        mavenLocal()
+        mavenCentral()
+        maven { url = uri('https://jitpack.io') }
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'com.diffplug.spotless'
+    apply plugin: 'com.github.spotbugs'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(25)
+        }
+    }
+
+    spotless {
+        java {
+            target 'src/**/*.java'
+            palantirJavaFormat()
+            removeUnusedImports()
+            trimTrailingWhitespace()
+            endWithNewline()
+        }
+    }
+
+    spotbugs {
+        toolVersion = '4.10.5'
+        ignoreFailures = false
+    }
+
+    tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
+        reports {
+            html.required = true
+            xml.required = true
+        }
+    }
+}

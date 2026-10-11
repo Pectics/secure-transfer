@@ -1,0 +1,38 @@
+# ================= SecureTransfer — Backend (Bukkit / Fabric) =================
+enabled: true
+
+jwt:
+  # 须与 Gateway 一致。
+  algorithm: "HS512"
+  secret: "CHANGE_ME"
+  # 期望的签发方(iss);留空=不校验。
+  issuer: "transferproxy"
+  # 可接受的 aud 值(通常填本机对外地址 host:port);空=不校验。
+  audience: []
+  # 时钟漂移容忍(秒)。
+  leeway-seconds: 5
+  # 强制 sub == 当前登录玩家 UUID(在 AsyncPlayerPreLoginEvent 校验,UUID 已解析)。
+  # 前提:Gateway 与 Backend 的 UUID 派生方式一致(同为正版,或同为离线)。
+  require-identity: true
+
+cookie:
+  key: "securetransfer:token"
+  # 等待客户端回传 cookie 的超时(毫秒);超时=拒绝。
+  timeout-ms: 3000
+
+replay:
+  enabled: true
+  database: "used-tokens.db"
+  synchronous: "FULL"
+  busy-timeout-ms: 3000
+  prune-interval-seconds: 300
+
+on-failure:
+  kick-message: "<red>Please connect through the gateway.</red>"
+
+bypass:
+  allow-direct: false
+  players: []
+
+log:
+  level: "INFO"

@@ -1,0 +1,21 @@
+# ================= SecureTransfer — Gateway (TransferProxy) =================
+enabled: true
+
+jwt:
+  # HS256 | HS384 | HS512(须与 Backend 一致)
+  algorithm: "HS512"
+  # base64 编码的随机共享密钥(建议 >= 64 字节,如 `openssl rand -base64 64`),与各 Backend 相同。
+  secret: "CHANGE_ME"
+  # 签发方标识(iss)。
+  issuer: "transferproxy"
+  # exp = iat + ttl(秒)。短命凭据,单次网络 IO 级别即可。
+  ttl-seconds: 30
+  # 是否把 PRE_TRANSFER 的目标(host:port)写入 aud,将 token 限死在特定后端。
+  bind-audience: true
+
+cookie:
+  # 需与 Backend 一致;格式 namespace:key。
+  key: "securetransfer:token"
+
+log:
+  level: "INFO"

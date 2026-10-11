@@ -1,0 +1,7 @@
+name: SecureTransfer
+author: Pectics
+version: ${version}
+description: SecureTransfer backend — verifies the gateway transfer cookie.
+main: me.pectics.securetransfer.bukkit.SecureTransferBukkitPlugin
+api-version: '1.20'
+depend: [packetevents]
